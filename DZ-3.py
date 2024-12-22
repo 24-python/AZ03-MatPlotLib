@@ -10,11 +10,7 @@ driver.get('https://www.divan.ru/krasnoyarsk/category/divany-i-kresla')
 
 time.sleep(10)
 
-prices = driver.find_elements(By.XPATH, "//span[@class='ui-LD-ZU KIkOH']")
-
-
-for price in prices:
-    print(price.text)
+prices = driver.find_elements(By.CLASS_NAME, 'ui-LD-ZU KIkOH')
 
 # Создание и открытие CSV файла для записи
 with open('divan.csv', mode='w', newline='', encoding='utf-8') as file:

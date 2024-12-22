@@ -21,7 +21,7 @@ url = "https://www.cian.ru/snyat-kvartiru-1-komn-ili-2-komn/"
 driver.get(url)
 
 # Подождем, чтобы страница полностью загрузилась
-time.sleep(5)  # Время ожидания может быть скорректировано
+  # Время ожидания может быть скорректировано
 
 # Получение цен
 prices = driver.find_elements(By.XPATH, "//span[@data-mark='MainPrice']/span")

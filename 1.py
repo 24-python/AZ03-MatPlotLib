@@ -1,36 +1,39 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException
 import time
 
-# # Укажите путь к вашему веб-драйверу
-# driver_path = 'path/to/your/chromedriver'
+# # Путь к вашему драйверу Chrome
+# CHROME_DRIVER_PATH = "path/to/chromedriver"
 #
-# # Инициализация веб-драйвера
-# service = Service(executable_path=driver_path)
+# # Настройки Selenium
+# options = webdriver.ChromeOptions()
+# options.add_argument("--headless")  # Если вы хотите запускать браузер в фоновом режиме
+#
+# # Инициализация драйвера
+# service = Service(CHROME_DRIVER_PATH)
 driver = webdriver.Firefox()
 
-# Открытие страницы
-driver.get('https://www.divan.ru/krasnoyarsk/category/divany-i-kresla')
-
-# Даем время странице загрузиться
 try:
-    # Ожидание, пока элементы с ценами станут видимыми
-    WebDriverWait(driver, 10).until(
-        EC.visibility_of_all_elements_located((By.XPATH, "//span[contains(@class, 'price__main-value')]"))
-    )
+    # Открытие сайта
+    url = "https://www.divan.ru/krasnoyarsk/category/divany"
+    driver.get(url)
 
-    # Найти все элементы с ценами через XPath
-    prices = driver.find_elements(By.XPATH, "//span[contains(@class, 'price__main-value')]")
+    # Небольшая пауза для загрузки страницы
+    time.sleep(5)
 
-    # Вывести все найденные цены
-    for price in prices:
-        print(price.text)
-except TimeoutException:
-    print("Не удалось загрузить элементы с ценами.")
+    # Поиск карточек товаров
+    products = driver.find_elements(By.CLASS_NAME, "WdR1o")
+
+    # Парсинг цен
+    for product in products:
+        try:
+            price = product.find_element(By.CLASS_NAME, "pY3d2").text
+            name = product.find_element(By.CLASS_NAME, "ui-GPFV8").text
+            print(f"Название: {name}, Цена: {price}")
+        except Exception as e:
+            print(f"Ошибка при обработке карточки: {e}")
+
 finally:
-    # Закрыть браузер
+    # Закрытие браузера
     driver.quit()
